@@ -203,6 +203,21 @@ function insertAverageIMDBScoreIntoHTML(originalMoviesList, targetDiv) {
 
 // ! 4-5
 
+function collectGenresOfMovies(originalMovieList) {
+  console.log(originalMovieList);
+  var allGenres = [];
+  for (var i = 0; i < originalMovieList.length; i++) {
+    for (var j = 0; j < originalMovieList[i].genres.length; j++) {
+      if (!allGenres.includes(originalMovieList[i].genres[j])) {
+        allGenres.push(originalMovieList[i].genres[j]);
+      }
+    }
+  }
+  console.log(allGenres);
+}
+
+// ! 4-6
+
 function collectYearsOfMovies(originalMovieList) {
   var allYears = [];
   for (var i = 0; i < originalMovieList.length; i++) {
@@ -210,29 +225,32 @@ function collectYearsOfMovies(originalMovieList) {
       allYears.push(originalMovieList[i].year);
     }
   }
-  console.log(allYears);
-  var max = countOcasionsOfAllYears(originalMovieList, allYears);
-  console.log(max);
-  return allYears;
+  var allYearsMostOccasions = countOcasionsOfAllYears(originalMovieList, allYears);
+  console.log(allYearsMostOccasions);
+  return allYearsMostOccasions;
 }
 
+// ? Gondolkoztam, hogy szedjem ezt szét, de a cleancode szerint max 3 paramétert adhatnék meg.
 function countOcasionsOfAllYears(originalMovieList, allYears) {
-  console.log(originalMovieList);
-  var countOne = 0;
+  var countActual = 0;
   var countBiggest = 0;
-  var whichYear;
+  var whichYear = [];
   for (var i = 0; i < allYears.length; i++) {
     for (var j = 0; j < originalMovieList.length; j++) {
       if (allYears[i] === originalMovieList[j].year) {
-        countOne++;
+        countActual++;
       }
     }
-    if (countOne > countBiggest) {
-      countBiggest = countOne;
-      countOne = 0;
-      whichYear = allYears[i];
+    if (countActual > countBiggest && whichYear.length > 2) {
+      countBiggest = countActual;
+      countActual = 0;
+      whichYear.unshift(allYears[i]);
+      whichYear.pop();
+    } else if (whichYear.length < 3) {
+      whichYear.unshift(allYears[i]);
+      countActual = 0;
     } else {
-      countOne = 0;
+      countActual = 0;
     }
   }
   return whichYear;
@@ -268,6 +286,7 @@ function successAjax(xhttp) {
   insertMovieStatsIntoHTML(longestMovie, moviesStats);
   insertRussellCroweSuccessesIntoHTML(movieList, moviesStats);
   insertAverageIMDBScoreIntoHTML(movieList, moviesStats);
-  collectYearsOfMovies(movieList);
+  var top3Years = collectYearsOfMovies(movieList);
+  collectGenresOfMovies(movieList);
 }
 getData('/json/top-rated-movies-01.json', successAjax);
