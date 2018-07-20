@@ -10,7 +10,7 @@ Top rated movies By IMDB
 * Check all task below and above. Delete the keys of every object, you won't need in the future.
 
 ## 3. Tasks with the filtered list
-* Search for all dramas in 1994, which has Tom Hanks, as an actor.
+* Search for all dramas in 1994, which has Jeremy Irons, as an actor.
 * Search for the longest and the shortest movies among them.
 * Put these two into HTML showing only their title, year, storyline and poster.
 

@@ -138,7 +138,7 @@ function insertMovieStatStoryLine(chosenStat) {
 
 function insertMovieStatPoster(chosentat) {
   var movieStatPoster = createDivElementMovieStatPoster();
-  movieStatPoster.innerHTML = `<img src="/img/${chosentat.poster}">`;
+  movieStatPoster.innerHTML = `<img src="/img/${chosentat.poster}" class="movie-poster">`;
   return movieStatPoster;
 }
 
