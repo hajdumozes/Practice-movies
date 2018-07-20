@@ -201,6 +201,43 @@ function insertAverageIMDBScoreIntoHTML(originalMoviesList, targetDiv) {
   targetDiv.appendChild(averageIMDBRatingStat);
 }
 
+// ! 4-5
+
+function collectYearsOfMovies(originalMovieList) {
+  var allYears = [];
+  for (var i = 0; i < originalMovieList.length; i++) {
+    if (!allYears.includes(originalMovieList[i].year)) {
+      allYears.push(originalMovieList[i].year);
+    }
+  }
+  console.log(allYears);
+  var max = countOcasionsOfAllYears(originalMovieList, allYears);
+  console.log(max);
+  return allYears;
+}
+
+function countOcasionsOfAllYears(originalMovieList, allYears) {
+  console.log(originalMovieList);
+  var countOne = 0;
+  var countBiggest = 0;
+  var whichYear;
+  for (var i = 0; i < allYears.length; i++) {
+    for (var j = 0; j < originalMovieList.length; j++) {
+      if (allYears[i] === originalMovieList[j].year) {
+        countOne++;
+      }
+    }
+    if (countOne > countBiggest) {
+      countBiggest = countOne;
+      countOne = 0;
+      whichYear = allYears[i];
+    } else {
+      countOne = 0;
+    }
+  }
+  return whichYear;
+}
+
 function getData(url, callbackFunc) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function xhttpState() {
@@ -216,7 +253,6 @@ function getData(url, callbackFunc) {
 function successAjax(xhttp) {
   // Innen lesz elérhető a JSON file tartalma, tehát az adatok amikkel dolgoznod kell
   var movieList = JSON.parse(xhttp.responseText);
-  console.log(movieList);
   // Innen lehet hívni.
   setOriginalTitleToTitle(movieList);
   var filteredMovieList = removeHorrorMovies(movieList);
@@ -232,5 +268,6 @@ function successAjax(xhttp) {
   insertMovieStatsIntoHTML(longestMovie, moviesStats);
   insertRussellCroweSuccessesIntoHTML(movieList, moviesStats);
   insertAverageIMDBScoreIntoHTML(movieList, moviesStats);
+  collectYearsOfMovies(movieList);
 }
 getData('/json/top-rated-movies-01.json', successAjax);
