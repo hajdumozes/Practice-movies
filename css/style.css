@@ -82,12 +82,16 @@ div{
 
 .movie-stat {
   color: black;
+  font-style: italic;
+  margin: auto auto 0 auto;
+  padding: 5px
 }
 
 .movie-stat-title {
   font-weight: bold;
   font-size: 25pt;
   margin: 0 0 50px 100px;
+  font-style: normal
 }
 
 .movie-stat-storyline {

@@ -142,6 +142,65 @@ function insertMovieStatPoster(chosentat) {
   return movieStatPoster;
 }
 
+// ! 4-1
+
+function selectRusselCroweMovies(originalMovieList) {
+  var moviesRusselCrowe = [];
+  for (var i = 0; i < originalMovieList.length; i++) {
+    if (originalMovieList[i].actors.includes('Russell Crowe')) {
+      moviesRusselCrowe.push(originalMovieList[i]);
+    }
+  }
+  return moviesRusselCrowe;
+}
+
+function bubbleSortRussellCroweMoviesByYear(moviesRusselCrowe) {
+  var change;
+  var i = moviesRusselCrowe.length - 1;
+  while (i > 0) {
+    change = 0;
+    for (var j = 0; j < i; j++) {
+      if (moviesRusselCrowe[j].year > moviesRusselCrowe[j + 1].year) {
+        [moviesRusselCrowe[j], moviesRusselCrowe[j + 1]] = [moviesRusselCrowe[j + 1], moviesRusselCrowe[j]];
+        change = j;
+      }
+    }
+    i = change;
+  }
+  return moviesRusselCrowe;
+}
+
+// ! 4-2
+
+function calculateAverageIMDBScoreOfOfAllMovies(originalMovieList) {
+  var sum = 0;
+  for (var i = 0; i < originalMovieList.length; i++) {
+    sum += originalMovieList[i].imdbRating;
+  }
+  var avg = sum / originalMovieList.length;
+  avg = avg.toFixed(1); // ? Így hasonlít a legjobban az IMDB pontszámhoz
+  return avg;
+}
+
+// ! 4-3
+
+function insertRussellCroweSuccessesIntoHTML(originalMovieList, targetDiv) {
+  var moviesRusselCrowe = selectRusselCroweMovies(originalMovieList);
+  bubbleSortRussellCroweMoviesByYear(moviesRusselCrowe);
+  var moviesRussellCroweStat = createDivElementMovieStat();
+  moviesRussellCroweStat.innerHTML = 'Russell Crowe made it to the top between';
+  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[0].year} and`;
+  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[moviesRusselCrowe.length - 1].year}.`;
+  targetDiv.appendChild(moviesRussellCroweStat);
+}
+
+function insertAverageIMDBScoreIntoHTML(originalMoviesList, targetDiv) {
+  var average = calculateAverageIMDBScoreOfOfAllMovies(originalMoviesList);
+  var averageIMDBRatingStat = createDivElementMovieStat();
+  averageIMDBRatingStat.innerHTML = `The average IMDB Score of the top 250 movies is ${average}.`;
+  targetDiv.appendChild(averageIMDBRatingStat);
+}
+
 function getData(url, callbackFunc) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function xhttpState() {
@@ -157,6 +216,7 @@ function getData(url, callbackFunc) {
 function successAjax(xhttp) {
   // Innen lesz elérhető a JSON file tartalma, tehát az adatok amikkel dolgoznod kell
   var movieList = JSON.parse(xhttp.responseText);
+  console.log(movieList);
   // Innen lehet hívni.
   setOriginalTitleToTitle(movieList);
   var filteredMovieList = removeHorrorMovies(movieList);
@@ -164,12 +224,13 @@ function successAjax(xhttp) {
   deleteAdditionalKeys(filteredMovieList);
   var movieJeremyIronsDrama1994 = searchForJeremyIrons1994DramaMovie(filteredMovieList);
   var shortestMovie = searchForLongestAndShortestMovies(filteredMovieList).shortest;
-  console.log(movieJeremyIronsDrama1994);
   var longestMovie = searchForLongestAndShortestMovies(filteredMovieList).longest;
   var moviesStats = document.querySelector('.movies-stats');
   createDivElementMovieStat();
   insertMovieStatsIntoHTML(movieJeremyIronsDrama1994, moviesStats);
   insertMovieStatsIntoHTML(shortestMovie, moviesStats);
   insertMovieStatsIntoHTML(longestMovie, moviesStats);
+  insertRussellCroweSuccessesIntoHTML(movieList, moviesStats);
+  insertAverageIMDBScoreIntoHTML(movieList, moviesStats);
 }
 getData('/json/top-rated-movies-01.json', successAjax);
