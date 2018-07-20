@@ -201,60 +201,40 @@ function insertAverageIMDBScoreIntoHTML(originalMoviesList, targetDiv) {
   targetDiv.appendChild(averageIMDBRatingStat);
 }
 
-// ! 4-4
-// ? A collectAllActorsOfMovies() és a collectAllGenresOfMovies() 95%-ban copy-paste, de
-// ? nem találtam rá megoldást, hogyan tudnám a kulcs miatt egyesíteni őket egybe.
-function collectAllActorsOfMovies(originalMovieList) {
-  console.log(originalMovieList);
-  var allActors = [];
-  var actors = 'actors';
+// ! 4-4 && 4-5
+function collectAllActorsOrGenresOfMovies(originalMovieList, actorsOrGenresParameter) {
+  var allActorsOrGenresArray = [];
   for (var i = 0; i < originalMovieList.length; i++) {
-    for (var j = 0; j < originalMovieList[i].actors.length; j++) {
-      if (!allActors.includes(originalMovieList[i].actors[j])) {
-        allActors.push(originalMovieList[i].actors[j]);
+    for (var j = 0; j < originalMovieList[i][actorsOrGenresParameter].length; j++) {
+      if (!allActorsOrGenresArray.includes(originalMovieList[i][actorsOrGenresParameter][j])) {
+        allActorsOrGenresArray.push(originalMovieList[i][actorsOrGenresParameter][j]);
       }
     }
   }
-  var allGenresMostOccasions = countOcasionsOfAll(originalMovieList, allActors, actors);
-  console.log(allActors);
+  var allGenresMostOccasions = countOcasionsOfAllActorsOrGenres(originalMovieList,
+    allActorsOrGenresArray, actorsOrGenresParameter);
+  console.log(allActorsOrGenresArray);
   console.log(allGenresMostOccasions);
 }
 
-// ! 4-5
-
-function collectAllGenresOfMovies(originalMovieList) {
-  var allGenres = [];
-  var genres = 'genres';
-  for (var i = 0; i < originalMovieList.length; i++) {
-    for (var j = 0; j < originalMovieList[i].genres.length; j++) {
-      if (!allGenres.includes(originalMovieList[i].genres[j])) {
-        allGenres.push(originalMovieList[i].genres[j]);
-      }
-    }
-  }
-  var allGenresMostOccasions = countOcasionsOfAll(originalMovieList, allGenres, genres);
-  console.log(allGenres);
-  console.log(allGenresMostOccasions);
-}
 
 // ! 4-6
 
 function collectYearsOfMovies(originalMovieList) {
   var allYears = [];
-  var year = 'year';
   for (var i = 0; i < originalMovieList.length; i++) {
     if (!allYears.includes(originalMovieList[i].year)) {
       allYears.push(originalMovieList[i].year);
     }
   }
-  var allYearsMostOccasions = countOcasionsOfAll(originalMovieList, allYears, year);
+  var allYearsMostOccasions = countOcasionsOfAllYears(originalMovieList, allYears);
   console.log(allYearsMostOccasions);
   return allYearsMostOccasions;
 }
 
-// ? Tudom, hogy iszonyat hosszú és 3 loopos ez a függvény.
+// ? Tudom, hogy iszonyat hosszú és 3 loopos ez a függvény. Ráadásul 2x szerepel az évek miatt.
 // ? Gondolkoztam, hogy szedjem ezt szét, de a cleancode szerint max 3 paramétert adhatnék meg.
-function countOcasionsOfAll(originalMovieList, collectionInput, searchParameter) {
+function countOcasionsOfAllActorsOrGenres(originalMovieList, collectionInput, searchParameter) {
   var countActual = 0;
   var countBiggest = 0;
   var Top3 = [];
@@ -264,6 +244,31 @@ function countOcasionsOfAll(originalMovieList, collectionInput, searchParameter)
         if (collectionInput[i] === originalMovieList[j][searchParameter][k]) {
           countActual++;
         }
+      }
+    }
+    if (countActual > countBiggest && Top3.length > 2) {
+      countBiggest = countActual;
+      countActual = 0;
+      Top3.unshift(collectionInput[i]);
+      Top3.pop();
+    } else if (Top3.length < 3) {
+      Top3.unshift(collectionInput[i]);
+      countActual = 0;
+    } else {
+      countActual = 0;
+    }
+  }
+  return Top3;
+}
+
+function countOcasionsOfAllYears(originalMovieList, collectionInput) {
+  var countActual = 0;
+  var countBiggest = 0;
+  var Top3 = [];
+  for (var i = 0; i < collectionInput.length; i++) {
+    for (var j = 0; j < originalMovieList.length; j++) {
+      if (collectionInput[i] === originalMovieList[j].year) {
+        countActual++;
       }
     }
     if (countActual > countBiggest && Top3.length > 2) {
@@ -311,8 +316,10 @@ function successAjax(xhttp) {
   insertMovieStatsIntoHTML(longestMovie, moviesStats);
   insertRussellCroweSuccessesIntoHTML(movieList, moviesStats);
   insertAverageIMDBScoreIntoHTML(movieList, moviesStats);
+  var genres = 'genres';
+  var actors = 'actors';
   var top3Years = collectYearsOfMovies(movieList);
-  var top3Genres = collectAllGenresOfMovies(movieList);
-  var top3Actors = collectAllActorsOfMovies(movieList);
+  var top3Genres = collectAllActorsOrGenresOfMovies(movieList, genres);
+  var top3Actors = collectAllActorsOrGenresOfMovies(movieList, actors);
 }
 getData('/json/top-rated-movies-01.json', successAjax);
