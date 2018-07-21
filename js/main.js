@@ -287,30 +287,61 @@ function countOcasionsOfAllYears(originalMovieList, collectionInput) {
 // ! 4-7
 
 function createMedalPedestal(mainSection, top3Position) {
-  var medalDiv = createDivElementMovieStat();
-  medalDiv.className = 'pedestal';
-  var medalImage = document.createElement('img');
-  medalImage.src = '/img/medal-pedestal.png';
-  medalDiv.appendChild(medalImage);
+  var medalDiv = insertMedalPedestalImage();
   createFirstPositionDiv(top3Position, medalDiv);
   createSecondPositionDiv(top3Position, medalDiv);
   createThirdPositionDiv(top3Position, medalDiv);
   mainSection.appendChild(medalDiv);
 }
 
+function insertMedalPedestalImage() {
+  var medalDiv = createDivElementMovieStat();
+  medalDiv.className = 'pedestal';
+  var medalImage = document.createElement('img');
+  medalImage.src = '/img/medal-pedestal.png';
+  medalDiv.appendChild(medalImage);
+  return medalDiv;
+}
+
 function createFirstPositionDiv(top3Position, medalDiv) {
   var first = createDivElementMovieStat();
   first.innerHTML = `${top3Position[0]}`;
   first.className = 'movie-stat-title';
-  first.classList.add('firstYear');
+  first.classList.add('firstPosition');
+  addAdditionalClasses(top3Position, first);
   medalDiv.appendChild(first);
+}
+
+function addAdditionalClasses(top3Position, position) {
+  addClassNameActor(top3Position, position);
+  addClassNameYear(top3Position, position);
+  addClassNameGenre(top3Position, position);
+}
+
+function addClassNameActor(top3Position, position) {
+  if (top3Position[0][0] === 'R') {
+    position.classList.add('actorPosition');
+  }
+}
+
+function addClassNameYear(top3Position, position) {
+  if (top3Position[0][0] === '1') {
+    position.classList.add('yearPosition');
+  }
+}
+
+function addClassNameGenre(top3Position, position) {
+  if (top3Position[0][0] === 'A') {
+    position.classList.add('genrePosition');
+  }
 }
 
 function createSecondPositionDiv(top3Position, medalDiv) {
   var second = createDivElementMovieStat();
   second.innerHTML = `${top3Position[1]}`;
   second.className = 'movie-stat-title';
-  second.classList.add('secondYear');
+  second.classList.add('secondPosition');
+  addAdditionalClasses(top3Position, second);
   medalDiv.appendChild(second);
 }
 
@@ -318,7 +349,8 @@ function createThirdPositionDiv(top3Position, medalDiv) {
   var third = createDivElementMovieStat();
   third.innerHTML = `${top3Position[2]}`;
   third.className = 'movie-stat-title';
-  third.classList.add('thirdYear');
+  third.classList.add('thirdPosition');
+  addAdditionalClasses(top3Position, third);
   medalDiv.appendChild(third);
 }
 

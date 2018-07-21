@@ -118,6 +118,7 @@ div{
  position: relative;
  margin: auto;
  width: 50%;
+ padding: 0
 }
 
 .pedestal img {
@@ -128,20 +129,42 @@ div{
   top: 50px
 }
 
-.firstYear {
+.actorPosition {
   position: relative;
-  top: -40px;
-  left: 135px;
+  left: 250px;
+} 
+
+.firstPosition {
+  position: relative;
+  top: -20px;
+  left: 100px;
 }
 
-.secondYear {
+.secondPosition {
   position: relative;
-  top: -115px;
-  left: 25px;
+  top: -100px;
+  left: -35px;
 }
 
-.thirdYear {
+.thirdPosition {
   position: relative;
-  top: -215px;
-  left: 255px;
+  top: -200px;
+  left: 270px;
+}
+
+.yearPosition:first-of-type{
+  position: relative;
+  top: -20px;
+  left: 155px;
+}
+
+.yearPosition:nth-of-type(2){
+  position: relative;
+  top: -90px;
+  left: 50px;
+}
+
+.genrePosition:first-of-type{
+  position: relative;
+  left: 120px;
 }
