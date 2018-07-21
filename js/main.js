@@ -213,8 +213,7 @@ function collectAllActorsOrGenresOfMovies(originalMovieList, actorsOrGenresParam
   }
   var allGenresMostOccasions = countOcasionsOfAllActorsOrGenres(originalMovieList,
     allActorsOrGenresArray, actorsOrGenresParameter);
-  console.log(allActorsOrGenresArray);
-  console.log(allGenresMostOccasions);
+  return allGenresMostOccasions;
 }
 
 
@@ -228,7 +227,6 @@ function collectYearsOfMovies(originalMovieList) {
     }
   }
   var allYearsMostOccasions = countOcasionsOfAllYears(originalMovieList, allYears);
-  console.log(allYearsMostOccasions);
   return allYearsMostOccasions;
 }
 
@@ -288,37 +286,37 @@ function countOcasionsOfAllYears(originalMovieList, collectionInput) {
 
 // ! 4-7
 
-function createMedalPedestal(mainSection, top3Years) {
+function createMedalPedestal(mainSection, top3Position) {
   var medalDiv = createDivElementMovieStat();
   medalDiv.className = 'pedestal';
   var medalImage = document.createElement('img');
   medalImage.src = '/img/medal-pedestal.png';
   medalDiv.appendChild(medalImage);
-  createFirstPositionDiv(top3Years, medalDiv);
-  createSecondPositionDiv(top3Years, medalDiv);
-  createThirdPositionDiv(top3Years, medalDiv);
+  createFirstPositionDiv(top3Position, medalDiv);
+  createSecondPositionDiv(top3Position, medalDiv);
+  createThirdPositionDiv(top3Position, medalDiv);
   mainSection.appendChild(medalDiv);
 }
 
-function createFirstPositionDiv(top3Years, medalDiv) {
+function createFirstPositionDiv(top3Position, medalDiv) {
   var first = createDivElementMovieStat();
-  first.innerHTML = `${top3Years[0]}`;
+  first.innerHTML = `${top3Position[0]}`;
   first.className = 'movie-stat-title';
   first.classList.add('firstYear');
   medalDiv.appendChild(first);
 }
 
-function createSecondPositionDiv(top3Years, medalDiv) {
+function createSecondPositionDiv(top3Position, medalDiv) {
   var second = createDivElementMovieStat();
-  second.innerHTML = `${top3Years[1]}`;
+  second.innerHTML = `${top3Position[1]}`;
   second.className = 'movie-stat-title';
   second.classList.add('secondYear');
   medalDiv.appendChild(second);
 }
 
-function createThirdPositionDiv(top3Years, medalDiv) {
+function createThirdPositionDiv(top3Position, medalDiv) {
   var third = createDivElementMovieStat();
-  third.innerHTML = `${top3Years[2]}`;
+  third.innerHTML = `${top3Position[2]}`;
   third.className = 'movie-stat-title';
   third.classList.add('thirdYear');
   medalDiv.appendChild(third);
@@ -360,5 +358,7 @@ function successAjax(xhttp) {
   var top3Genres = collectAllActorsOrGenresOfMovies(movieList, genres);
   var top3Actors = collectAllActorsOrGenresOfMovies(movieList, actors);
   createMedalPedestal(moviesStats, top3Years);
+  createMedalPedestal(moviesStats, top3Genres);
+  createMedalPedestal(moviesStats, top3Actors);
 }
 getData('/json/top-rated-movies-01.json', successAjax);
