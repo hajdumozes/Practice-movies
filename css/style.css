@@ -34,6 +34,7 @@ div{
 .one-movie{
   width: 100%;
   background:  #000;
+  color: white
 }
 
 .searchbar{
@@ -167,4 +168,9 @@ div{
 .genrePosition:first-of-type{
   position: relative;
   left: 120px;
+}
+
+.one-movie-result {
+  color: white;
+  font-style: italic
 }

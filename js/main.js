@@ -154,13 +154,13 @@ function selectRusselCroweMovies(originalMovieList) {
   return moviesRusselCrowe;
 }
 
-function bubbleSortRussellCroweMoviesByYear(moviesRusselCrowe) {
+function bubbleSortDescending(moviesRusselCrowe, sortByValue) {
   var change;
   var i = moviesRusselCrowe.length - 1;
   while (i > 0) {
     change = 0;
     for (var j = 0; j < i; j++) {
-      if (moviesRusselCrowe[j].year > moviesRusselCrowe[j + 1].year) {
+      if (moviesRusselCrowe[j][sortByValue] < moviesRusselCrowe[j + 1][sortByValue]) {
         [moviesRusselCrowe[j], moviesRusselCrowe[j + 1]] = [moviesRusselCrowe[j + 1], moviesRusselCrowe[j]];
         change = j;
       }
@@ -186,11 +186,12 @@ function calculateAverageIMDBScoreOfOfAllMovies(originalMovieList) {
 
 function insertRussellCroweSuccessesIntoHTML(originalMovieList, targetDiv) {
   var moviesRusselCrowe = selectRusselCroweMovies(originalMovieList);
-  bubbleSortRussellCroweMoviesByYear(moviesRusselCrowe);
+  var sortByYear = 'year';
+  bubbleSortDescending(moviesRusselCrowe, sortByYear);
   var moviesRussellCroweStat = createDivElementMovieStat();
   moviesRussellCroweStat.innerHTML = 'Russell Crowe made it to the top between';
-  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[0].year} and`;
-  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[moviesRusselCrowe.length - 1].year}.`;
+  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[moviesRusselCrowe.length - 1].year} and`;
+  moviesRussellCroweStat.innerHTML += ` ${moviesRusselCrowe[0].year}.`;
   targetDiv.appendChild(moviesRussellCroweStat);
 }
 
@@ -354,6 +355,45 @@ function createThirdPositionDiv(top3Position, medalDiv) {
   medalDiv.appendChild(third);
 }
 
+// ! 5
+
+function activateSearch(filteredMovieList) {
+  var searchButton = document.querySelector('#search-button');
+  searchButton.addEventListener('click', function event() {
+    searchForYear(filteredMovieList);
+  });
+}
+
+function searchForYear(filteredMovieList) {
+  var sortByIMDB = 'imdbRating';
+  bubbleSortDescending(filteredMovieList, sortByIMDB);
+  var searchedYear = document.querySelector('#search-text').value;
+  var found = false;
+  var i = 0;
+  while (i < filteredMovieList.length && !found) {
+    if (searchedYear === filteredMovieList[i].year) {
+      found = true;
+      var foundMovie = createOutputTemplate(filteredMovieList[i]);
+    }
+    i++;
+  }
+  var resultDiv = createDivElementMovieStat();
+  resultDiv.innerHTML = foundMovie;
+  resultDiv.className = 'one-movie-result';
+  var targetDiv = document.querySelector('.one-movie');
+  targetDiv.appendChild(resultDiv);
+}
+
+function createOutputTemplate(objectOfFoundYear) {
+  var outputTemplate = '';
+  for (var k in objectOfFoundYear) {
+    if (objectOfFoundYear.hasOwnProperty(k) && k !== 'poster') {
+      outputTemplate += `${k}: ${objectOfFoundYear[k]} <br>`;
+    }
+  }
+  return outputTemplate;
+}
+
 function getData(url, callbackFunc) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function xhttpState() {
@@ -392,5 +432,6 @@ function successAjax(xhttp) {
   createMedalPedestal(moviesStats, top3Years);
   createMedalPedestal(moviesStats, top3Genres);
   createMedalPedestal(moviesStats, top3Actors);
+  activateSearch(filteredMovieList);
 }
 getData('/json/top-rated-movies-01.json', successAjax);

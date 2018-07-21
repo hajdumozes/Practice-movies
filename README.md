@@ -24,4 +24,4 @@ Top rated movies By IMDB
 * Put the top 3 year/genre/actor on a medal pedestal in HTML.
 
 ## 5. Search button
-* Search for movies by their release date. If there are more, than one, put the highest rated in the one-movie div.
+* Search for movies by their release date(year only). If there are more, than one, put the highest rated in the one-movie div.
