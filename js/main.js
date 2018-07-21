@@ -367,6 +367,10 @@ function activateSearch(filteredMovieList) {
 function searchForYear(filteredMovieList) {
   var sortByIMDB = 'imdbRating';
   bubbleSortDescending(filteredMovieList, sortByIMDB);
+  searchForYearWhile(filteredMovieList);
+}
+
+function searchForYearWhile(filteredMovieList) {
   var searchedYear = document.querySelector('#search-text').value;
   var found = false;
   var i = 0;
@@ -374,20 +378,66 @@ function searchForYear(filteredMovieList) {
     if (searchedYear === filteredMovieList[i].year) {
       found = true;
       var foundMovie = createOutputTemplate(filteredMovieList[i]);
+      var objectofFoundYearPoster = document.createElement('img');
+      objectofFoundYearPoster.src = `/img/${filteredMovieList[i].poster}`;
     }
     i++;
   }
-  var resultDiv = createDivElementMovieStat();
-  resultDiv.innerHTML = foundMovie;
-  resultDiv.className = 'one-movie-result';
+  displayAfterSearch(foundMovie, objectofFoundYearPoster, found);
+}
+
+function displayAfterSearch(foundMovie, objectofFoundYearPoster, found) {
   var targetDiv = document.querySelector('.one-movie');
+  if (found) {
+    ifFoundTasks(foundMovie, objectofFoundYearPoster, targetDiv);
+  } else {
+    ifNotFoundTasks(targetDiv);
+  }
+}
+
+function ifFoundTasks(foundMovie, objectofFoundYearPoster, targetDiv) {
+  deletePreviousSideDiv(targetDiv);
+  var resultDiv = createResultDivForSearch();
+  fillResultDivIfFound(resultDiv, foundMovie, objectofFoundYearPoster, targetDiv);
+}
+
+function ifNotFoundTasks(targetDiv) {
+  deletePreviousSideDiv(targetDiv);
+  var resultDiv = createResultDivForSearch();
+  fillResultDivIfNotFound(resultDiv, targetDiv);
+}
+
+function createResultDivForSearch() {
+  var resultDiv = createDivElementMovieStat();
+  resultDiv.className = 'one-movie-result';
+  resultDiv.id = 'div-to-delete';
+  return resultDiv;
+}
+
+function deletePreviousSideDiv(targetDiv) {
+  if (document.querySelector('#div-to-delete')) {
+    var divToDelete = document.querySelector('#div-to-delete');
+    targetDiv.removeChild(divToDelete);
+  }
+}
+
+function fillResultDivIfFound(resultDiv, foundMovie, objectofFoundYearPoster, targetDiv) {
+  resultDiv.innerHTML = foundMovie;
+  resultDiv.appendChild(objectofFoundYearPoster);
+  targetDiv.appendChild(resultDiv);
+}
+
+function fillResultDivIfNotFound(resultDiv, targetDiv) {
+  var notFoundImage = document.createElement('img');
+  notFoundImage.src = '/img/not-found.png';
+  resultDiv.appendChild(notFoundImage);
   targetDiv.appendChild(resultDiv);
 }
 
 function createOutputTemplate(objectOfFoundYear) {
   var outputTemplate = '';
   for (var k in objectOfFoundYear) {
-    if (objectOfFoundYear.hasOwnProperty(k) && k !== 'poster') {
+    if (objectOfFoundYear.hasOwnProperty(k) && k !== 'poster' && k !== 'storyline') {
       outputTemplate += `${k}: ${objectOfFoundYear[k]} <br>`;
     }
   }

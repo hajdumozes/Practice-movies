@@ -64,10 +64,14 @@ div{
 @media(min-width:1200px){
   .movies-stats{
     width: 75%;
+    background-image: url(/img/movie-background.jpg);
+    background-size: 110%;
   }
 
   .one-movie{
     width: 25%;
+    background-image: url(/img/one-movie-background.jpg);
+    background-size: 105%
   }
 
   .container>div{
@@ -173,4 +177,11 @@ div{
 .one-movie-result {
   color: white;
   font-style: italic
+}
+
+.one-movie-result img {
+  padding: 20px;
+  margin: auto;
+  width:80%;
+  height: 80%;
 }
