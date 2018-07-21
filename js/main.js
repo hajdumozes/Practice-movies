@@ -286,6 +286,44 @@ function countOcasionsOfAllYears(originalMovieList, collectionInput) {
   return Top3;
 }
 
+// ! 4-7
+
+function createMedalPedestal(mainSection, top3Years) {
+  var medalDiv = createDivElementMovieStat();
+  medalDiv.className = 'pedestal';
+  var medalImage = document.createElement('img');
+  medalImage.src = '/img/medal-pedestal.png';
+  medalDiv.appendChild(medalImage);
+  createFirstPositionDiv(top3Years, medalDiv);
+  createSecondPositionDiv(top3Years, medalDiv);
+  createThirdPositionDiv(top3Years, medalDiv);
+  mainSection.appendChild(medalDiv);
+}
+
+function createFirstPositionDiv(top3Years, medalDiv) {
+  var first = createDivElementMovieStat();
+  first.innerHTML = `${top3Years[0]}`;
+  first.className = 'movie-stat-title';
+  first.classList.add('firstYear');
+  medalDiv.appendChild(first);
+}
+
+function createSecondPositionDiv(top3Years, medalDiv) {
+  var second = createDivElementMovieStat();
+  second.innerHTML = `${top3Years[1]}`;
+  second.className = 'movie-stat-title';
+  second.classList.add('secondYear');
+  medalDiv.appendChild(second);
+}
+
+function createThirdPositionDiv(top3Years, medalDiv) {
+  var third = createDivElementMovieStat();
+  third.innerHTML = `${top3Years[2]}`;
+  third.className = 'movie-stat-title';
+  third.classList.add('thirdYear');
+  medalDiv.appendChild(third);
+}
+
 function getData(url, callbackFunc) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function xhttpState() {
@@ -321,5 +359,6 @@ function successAjax(xhttp) {
   var top3Years = collectYearsOfMovies(movieList);
   var top3Genres = collectAllActorsOrGenresOfMovies(movieList, genres);
   var top3Actors = collectAllActorsOrGenresOfMovies(movieList, actors);
+  createMedalPedestal(moviesStats, top3Years);
 }
 getData('/json/top-rated-movies-01.json', successAjax);

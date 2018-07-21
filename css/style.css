@@ -113,3 +113,35 @@ div{
   width: 40%;
   height: 40%;
 }
+
+.pedestal {
+ position: relative;
+ margin: auto;
+ width: 50%;
+}
+
+.pedestal img {
+  position: absolute;
+  width: 70%;
+  margin: auto;
+  left: 120px;
+  top: 50px
+}
+
+.firstYear {
+  position: relative;
+  top: -40px;
+  left: 135px;
+}
+
+.secondYear {
+  position: relative;
+  top: -115px;
+  left: 25px;
+}
+
+.thirdYear {
+  position: relative;
+  top: -215px;
+  left: 255px;
+}
